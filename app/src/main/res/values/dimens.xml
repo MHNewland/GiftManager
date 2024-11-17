@@ -1,9 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="fragment_horizontal_margin">16dp</dimen>
-    <dimen name="item_transform_image_length">48dp</dimen>
-    <dimen name="reflow_text_block_max_percent">1</dimen>
-    <dimen name="reflow_text_block_horizontal_gap">8dp</dimen>
-    <dimen name="reflow_text_title_size">22sp</dimen>
-    <dimen name="reflow_text_description_size">13sp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+
+    <dimen name="card_corner_radius">20dp</dimen>
+    <dimen name="card_image_height">128dp</dimen>
+    <dimen name="card_text_vertical_space">4dp</dimen>
+
+    <dimen name="button_corner_radius">30.dp</dimen>
+
+    <dimen name="padding_detail_content_horizontal">40dp</dimen>
+    <dimen name="padding_detail_content_vertical">24dp</dimen>
 </resources>
