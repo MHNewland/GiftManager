@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -133,7 +134,10 @@ fun GiftManagerApp(
                     viewModel.updatePersonData(it)
                     viewModel.navigateToListPage()
                 },
-                modifier = modifier.padding(innerPadding)
+                onSyncButtonClicked = {
+                    viewModel.updatePersonData(it)
+                },
+                modifier = Modifier.safeContentPadding()
             )
         }
 
