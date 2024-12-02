@@ -1,7 +1,6 @@
 package com.mnewland.giftmanager.data
 
 import com.mnewland.giftmanager.model.Person
-import kotlin.random.Random
 
 object PersonList {
     private val personList: MutableList<Person> = emptyList<Person>().toMutableList()
