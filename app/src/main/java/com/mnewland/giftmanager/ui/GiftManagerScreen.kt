@@ -1,23 +1,16 @@
 package com.mnewland.giftmanager.ui
 
-import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.app.AlertDialog
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,38 +20,30 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.utils.GiftManagerContentType
 import com.mnewland.giftmanager.data.PersonList
@@ -97,11 +82,26 @@ fun GiftManagerApp(
             GiftManagerAppBar(
                 isShowingListPage = uiState.isShowingListPage,
                 onBackButtonClick = { viewModel.navigateToListPage() },
-                onAddPersonClick = {
-                    viewModel.updateCurrentPerson(Person())
-                    viewModel.navigateToProfilePage()
-                },
+                context = LocalContext.current
             )
+        },
+        floatingActionButton = {
+            if(uiState.isShowingListPage) {
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.updateCurrentPerson(Person())
+                        viewModel.navigateToProfilePage()
+                    },
+                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
+
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.add_person),
+                    )
+                }
+            }
         }
     ) { innerPadding ->
         if (uiState.isShowingListPage) {
@@ -145,7 +145,7 @@ fun GiftManagerApp(
 @Composable
 fun GiftManagerAppBar(
     onBackButtonClick: () -> Unit,
-    onAddPersonClick: () -> Unit,
+    context: Context,
     isShowingListPage: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -169,17 +169,43 @@ fun GiftManagerAppBar(
         } else {
             { Box {} }
         },
-        actions = if(isShowingListPage){
-            {
-                IconButton(onClick = onAddPersonClick) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = stringResource(R.string.add_person)
-                    )
+        actions = {
+            val listAlertBox: AlertDialog.Builder = AlertDialog.Builder(context)
+            listAlertBox
+                .setTitle("Help")
+                .setNeutralButton("OK") { dialog, which ->
                 }
+            if(isShowingListPage) {
+
+                listAlertBox
+                    .setMessage(
+                        "To add a person, press the \"+\" in the bottom right.\n\n" +
+                                "When the person's \"Purchased Item\" field is filled out, it " +
+                                "will check the box next to their name and show what item was purchased."
+                    )
+            }else{
+                listAlertBox
+                    .setMessage(
+                        "You can set the person's information here.\n\n If anything is placed in the" +
+                                "\"Purchased Item\" field, it will show a check mark and display " +
+                                "what's entered on the main screen.\n\n" +
+                                "Currently, the app only syncs with Amazon wish lists that are public. " +
+                                "To sync to an amazon list, copy and paste the URL or the ID for the list and click " +
+                                "the sync button.\n\n" +
+                                "To find the ID, look for the string of characters after \"www.amazon.com/hz/wishlist/ls/\"."
+                    )
             }
-        }else{
-            {Box{}}
+            IconButton(
+                onClick = {
+                    val dialog: AlertDialog = listAlertBox.create()
+                    dialog.show()
+                }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.help_outline),
+                    contentDescription = stringResource(R.string.back_button)
+                )
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
