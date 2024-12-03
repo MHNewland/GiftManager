@@ -17,5 +17,4 @@ object PersonList {
         return personList
     }
 
-
 }

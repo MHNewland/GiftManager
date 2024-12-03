@@ -1,4 +1,4 @@
-package com.mnewland.giftmanager.ui
+package com.mnewland.giftmanager.view_models
 
 import androidx.lifecycle.ViewModel
 import com.mnewland.giftmanager.data.PersonList
@@ -27,13 +27,16 @@ class GiftManagerViewModel: ViewModel() {
     }
 
     fun updatePersonData(selectedPerson: Person) {
+        val updatePerson: Person
+        updatePerson = selectedPerson
         val updatedList = _uiState.value.personList.map { person ->
-            if (person.id == selectedPerson.id) {
-                selectedPerson
+            if (person.id == updatePerson.id) {
+                updatePerson
             } else {
                 person
             }
         }
+        updateCurrentPerson(updatePerson)
         _uiState.update { it.copy(personList = updatedList) }
     }
 
@@ -51,20 +54,21 @@ class GiftManagerViewModel: ViewModel() {
         }
     }
 
-    fun addPerson(person: Person){
+    fun addPerson(person: Person): Person{
         var newID: Int
         do {
             newID = Random.nextInt()
-        }while(_uiState.value.personList.any{it.id == newID})
+        } while (_uiState.value.personList.any { it.id == newID })
 
         val newPerson = person.copy(
             id = newID
         )
         _uiState.update {currentState ->
             currentState.copy(personList = currentState.personList+newPerson)
-
         }
+        return newPerson
     }
+
 }
 
 data class GiftManagerUIState(

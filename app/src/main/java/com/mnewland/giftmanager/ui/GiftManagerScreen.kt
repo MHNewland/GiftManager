@@ -1,7 +1,10 @@
 package com.mnewland.giftmanager.ui
 
+<<<<<<< HEAD
 import android.app.AlertDialog
 import android.content.Context
+=======
+>>>>>>> AmazonList
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+<<<<<<< HEAD
+=======
+import androidx.compose.foundation.layout.safeContentPadding
+>>>>>>> AmazonList
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -35,7 +42,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+<<<<<<< HEAD
 import androidx.compose.ui.platform.LocalContext
+=======
+>>>>>>> AmazonList
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +60,7 @@ import com.mnewland.giftmanager.data.PersonList
 import com.mnewland.giftmanager.model.Person
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
+import com.mnewland.giftmanager.view_models.GiftManagerViewModel
 
 
 @Composable
@@ -121,8 +132,6 @@ fun GiftManagerApp(
             ProfilePage(
                 uiState.currentPerson,
                 onValueChanged = {
-                    Log.d("onValueChanged it.name", it.name)
-                    Log.d("onValueChanged it.listLink", it.listLink)
                     viewModel.updateCurrentPerson(it)
                 },
                 onAddButtonClicked = {
@@ -133,7 +142,11 @@ fun GiftManagerApp(
                     viewModel.updatePersonData(it)
                     viewModel.navigateToListPage()
                 },
-                modifier = modifier.padding(innerPadding)
+                onSyncButtonClicked = {
+                    viewModel.updatePersonData(it)
+                },
+                modifier = modifier
+                    .padding(innerPadding)
             )
         }
 
