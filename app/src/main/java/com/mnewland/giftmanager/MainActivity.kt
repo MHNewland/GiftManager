@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            GiftManagerAppTheme(dynamicColor = false) {
+            GiftManagerAppTheme(dynamicColor = true) {
                 Surface {
                     GiftManagerApp(calculateWindowSizeClass(LocalContext.current as Activity))
                 }
