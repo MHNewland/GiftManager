@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GiftManager</string>
+    <string name="back_button">Back</string>
+    <string name="add_person">Add new person</string>
+    <string name="name">Name</string>
+    <string name="list_link">Link to list</string>
+    <string name="purchaced_item">Item Purchased</string>
+</resources>
