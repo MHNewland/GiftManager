@@ -1,5 +1,7 @@
 package com.mnewland.giftmanager.ui
 
+import android.app.AlertDialog
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,16 +11,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,9 +35,13 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,128 +54,7 @@ import com.mnewland.giftmanager.data.PersonList
 import com.mnewland.giftmanager.model.Person
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
-
-
-@Composable
-fun GiftManagerApp(
-    windowSize: WindowSizeClass,
-    modifier: Modifier = Modifier
-){
-    val contentType: GiftManagerContentType
-
-    when (windowSize.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> {
-            contentType = GiftManagerContentType.ListOnly
-        }
-        WindowWidthSizeClass.Medium -> {
-            contentType = GiftManagerContentType.ListOnly
-        }
-        WindowWidthSizeClass.Expanded -> {
-            contentType = GiftManagerContentType.ListAndDetail
-        }
-        else -> {
-            contentType = GiftManagerContentType.ListOnly
-        }
-    }
-
-    val viewModel: GiftManagerViewModel = viewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    Scaffold(
-        topBar = {
-            GiftManagerAppBar(
-                isShowingListPage = uiState.isShowingListPage,
-                onBackButtonClick = { viewModel.navigateToListPage() },
-                onAddPersonClick = {
-                    viewModel.updateCurrentPerson(Person())
-                    viewModel.navigateToProfilePage()
-                },
-            )
-        }
-    ) { innerPadding ->
-        if (uiState.isShowingListPage) {
-            ListLayout(
-                uiState.personList,
-                onCheckedChange = {
-                    viewModel.updateCurrentPerson(it)
-                    viewModel.navigateToProfilePage()
-                },
-                onProfileButtonClicked = {
-                    viewModel.updateCurrentPerson(it)
-                    viewModel.navigateToProfilePage()
-                },
-                modifier = modifier.padding(innerPadding)
-            )
-        }else{
-            ProfilePage(
-                uiState.currentPerson,
-                onValueChanged = {
-                    Log.d("onValueChanged it.name", it.name)
-                    Log.d("onValueChanged it.listLink", it.listLink)
-                    viewModel.updateCurrentPerson(it)
-                },
-                onAddButtonClicked = {
-                    viewModel.addPerson(it)
-                    viewModel.navigateToListPage()
-                },
-                onEditButtonClicked = {
-                    viewModel.updatePersonData(it)
-                    viewModel.navigateToListPage()
-                },
-                modifier = modifier.padding(innerPadding)
-            )
-        }
-
-    }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GiftManagerAppBar(
-    onBackButtonClick: () -> Unit,
-    onAddPersonClick: () -> Unit,
-    isShowingListPage: Boolean,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = {
-            Text(
-                text = "Gift List",
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        navigationIcon = if (!isShowingListPage) {
-            {
-                IconButton(onClick = onBackButtonClick) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
-                    )
-                }
-            }
-        } else {
-            { Box {} }
-        },
-        actions = if(isShowingListPage){
-            {
-                IconButton(onClick = onAddPersonClick) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = stringResource(R.string.add_person)
-                    )
-                }
-            }
-        }else{
-            {Box{}}
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-        modifier = modifier,
-    )
-}
+import com.mnewland.giftmanager.view_models.GiftManagerViewModel
 
 @Composable
 fun PersonCardLayout(

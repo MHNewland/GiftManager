@@ -5,4 +5,7 @@
     <string name="name">Name</string>
     <string name="list_link">Link to list</string>
     <string name="purchaced_item">Item Purchased</string>
+    <string name="gift_manager">Gift Manager</string>
+    <string name="profile">Profile</string>
+    <string name="preferences">Preferences</string>
 </resources>

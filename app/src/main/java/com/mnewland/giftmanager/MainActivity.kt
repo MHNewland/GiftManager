@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.platform.LocalContext
-import com.mnewland.giftmanager.ui.GiftManagerApp
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -18,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            GiftManagerAppTheme(dynamicColor = false) {
+            GiftManagerAppTheme(dynamicColor = true) {
                 Surface {
                     GiftManagerApp(calculateWindowSizeClass(LocalContext.current as Activity))
                 }

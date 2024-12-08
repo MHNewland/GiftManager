@@ -1,5 +1,6 @@
 package com.mnewland.giftmanager.ui.theme
 
+import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,7 +11,9 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -259,15 +262,18 @@ fun GiftManagerAppTheme(
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit
 ) {
-  val colorScheme = when {
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+    primaryContainerLight = Color(sharedPreferences.getInt("test", primaryContainerLight.toArgb()))
+    val colorScheme = when {
       dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-          val context = LocalContext.current
+
           if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
       }
 
       darkTheme -> darkScheme
       else -> lightScheme
-  }
+    }
 
   MaterialTheme(
     colorScheme = colorScheme,

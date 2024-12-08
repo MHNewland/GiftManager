@@ -5,5 +5,5 @@ data class Person(
     val name: String = "",
     val listLink: String = "",
     val purchasedItem: String = "",
-    val Wishlist: List<WishlistItem> = emptyList()
+    val wishList: List<WishlistItem> = emptyList()
 )
