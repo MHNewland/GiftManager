@@ -36,7 +36,7 @@ import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
 
 @Composable
 fun AddItem(
-    item: WishlistItem = WishlistItem(),
+    item: WishlistItem,
     onValueChanged: (WishlistItem) -> Unit,
     onAddButtonClicked: (WishlistItem) -> Unit,
     onEditButtonClicked: (WishlistItem) -> Unit,
