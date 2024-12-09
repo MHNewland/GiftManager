@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             GiftManagerAppTheme(dynamicColor = true) {
                 Surface {
-                    GiftManagerApp(calculateWindowSizeClass(LocalContext.current as Activity))
+                    GiftManagerApp(windowSize =  calculateWindowSizeClass(LocalContext.current as Activity))
                 }
             }
         }

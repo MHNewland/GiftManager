@@ -1,6 +1,4 @@
-package com.mnewland.giftmanager.data
-
-import com.mnewland.giftmanager.model.Person
+package com.mnewland.giftmanager.data.person
 
 object PersonList {
     private val personList: MutableList<Person> = emptyList<Person>().toMutableList()

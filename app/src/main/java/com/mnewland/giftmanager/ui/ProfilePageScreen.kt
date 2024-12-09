@@ -1,6 +1,7 @@
 package com.mnewland.giftmanager.ui
 
 
+import android.text.Editable.Factory
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,19 +49,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.mnewland.giftmanager.AppViewModelProvider
 import com.mnewland.giftmanager.R
-import com.mnewland.giftmanager.data.PersonList
-import com.mnewland.giftmanager.model.Person
-import com.mnewland.giftmanager.model.WishlistItem
+import com.mnewland.giftmanager.data.person.PersonList
+import com.mnewland.giftmanager.data.person.Person
+import com.mnewland.giftmanager.data.wish_list.WishListItem
 import com.mnewland.giftmanager.network.amazonParser
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
+import com.mnewland.giftmanager.view_models.GiftManagerViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProfilePage(
-    person: Person = Person(),
+    viewModel: GiftManagerViewModel,
     onValueChanged: (Person) -> Unit,
     onAddButtonClicked: (Person) -> Unit,
     onEditButtonClicked: (Person) -> Unit,
@@ -67,8 +72,8 @@ fun ProfilePage(
     modifier: Modifier = Modifier
 ){
     val coroutineScope = rememberCoroutineScope()
-
     var showSyncErrorDialog by remember { mutableStateOf(false) }
+    val person = viewModel.getCurrentPerson().collectAsState(Person())
 
     Column(
         modifier = modifier
@@ -80,16 +85,18 @@ fun ProfilePage(
                 //.border(2.dp, Color.Cyan)
         ) {
             TextField(
-                value = person.name,
+                value = (
+                    "test"
+                ),
                 label = {
                     Text(
                         text = stringResource(R.string.name)
                     )
                 },
                 onValueChange = {
-                    onValueChanged(
-                        person.copy(name = it)
-                    )
+//                    onValueChanged(
+//                        person.copy(name = it)
+//                    )
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier
@@ -102,7 +109,7 @@ fun ProfilePage(
                 //.border(2.dp, Color.Yellow)
         ){
             TextField(
-                value = person.purchasedItem,
+                value = person.value.purchasedItem,
                 label = {
                     Text(
                         text = stringResource(R.string.purchaced_item)
@@ -111,17 +118,17 @@ fun ProfilePage(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        if (person.id == 0) {
-                            onAddButtonClicked(person)
-                        } else {
-                            onEditButtonClicked(person)
-                        }
+//                        if (person.id == 0) {
+//                            onAddButtonClicked(person)
+//                        } else {
+//                            onEditButtonClicked(person)
+//                        }
                     }
                 ),
                 onValueChange = {
-                    onValueChanged(
-                        person.copy(purchasedItem = it)
-                    )
+//                    onValueChanged(
+//                        person.copy(purchasedItem = it)
+//                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -136,16 +143,16 @@ fun ProfilePage(
                 //.border(2.dp, Color.LightGray)
         ) {
             TextField(
-                value = person.listLink,
+                value = person.value.wishListId.toString(),
                 label = {
                     Text(
                         text = stringResource(R.string.list_link)
                     )
                 },
                 onValueChange = {
-                    onValueChanged(
-                        person.copy(listLink = it)
-                    )
+//                    onValueChanged(
+//                        person.copy(listLink = it)
+//                    )
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 singleLine = true,
@@ -163,7 +170,7 @@ fun ProfilePage(
                 Button(
                     onClick = {
 
-                        coroutineScope.launch {
+                        /*coroutineScope.launch {
                             val wishlist = amazonParser(person.listLink)
                             if(wishlist.isNotEmpty()) {
                                 val updatedPerson = person.copy(wishList = wishlist)
@@ -171,7 +178,7 @@ fun ProfilePage(
                             }else {
                                 showSyncErrorDialog = true
                             }
-                        }
+                        }*/
                     },
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
@@ -202,8 +209,8 @@ fun ProfilePage(
                 showDialog = showSyncErrorDialog,
                 onDismiss = { showSyncErrorDialog = false },
             )
-            if(person.wishList.isNotEmpty())
-                ItemList(person.wishList)
+            if(person.value.wishListId!=0)
+                //ItemList()
             else
                 Text(
                     text = "No items found",
@@ -221,21 +228,21 @@ fun ProfilePage(
         ) {
             Button(
                 onClick = {
-                    if (person.id == 0) {
-                        onAddButtonClicked(person)
-                    } else {
-                        onEditButtonClicked(person)
-                    }
+//                    if (person.id == 0) {
+//                        onAddButtonClicked(person)
+//                    } else {
+//                        onEditButtonClicked(person)
+//                    }
                 },
                 shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius))
             ) {
                 Text(
-                    text = (
-                        if (person.id == 0) {
-                            "Add person"
-                        } else {
-                            "Edit person"
-                        }
+                    text = ("test"
+//                        if (person.id == 0) {
+//                            "Add person"
+//                        } else {
+//                            "Edit person"
+//                        }
                     )
                 )
             }
@@ -262,7 +269,7 @@ fun ShowSyncErrorDialog(showDialog: Boolean, onDismiss: () -> Unit) {
 
 @Composable
 fun ItemList(
-    itemList: List<WishlistItem>,
+    itemList: List<WishListItem>,
     modifier: Modifier = Modifier
 ){
     LazyColumn (
@@ -279,7 +286,7 @@ fun ItemList(
 
 @Composable
 fun WishlistItemCard(
-    item: WishlistItem,
+    item: WishListItem,
     modifier: Modifier = Modifier
 ){
     Row(
@@ -363,12 +370,15 @@ fun WishlistItemCard(
 fun WishlistItemPreview() {
     GiftManagerAppTheme(dynamicColor = false) {
         WishlistItemCard(
-            WishlistItem(
+            WishListItem(
+                id = 0,
                 title = "test",
                 price = "20.99",
                 imageUrl = "https://m.media-amazon.com/images/I/51UnZ6EohmL._SS135_.jpg",
-                itemUrl = "testURL"
-            ))
+                itemUrl = "testURL",
+                personId = 0
+            )
+        )
     }
 }
 
@@ -378,6 +388,6 @@ fun WishlistItemPreview() {
 @Composable
 fun ProfilePagePreview() {
     GiftManagerAppTheme(dynamicColor = false) {
-        ProfilePage(PersonList.defaultPerson,{}, {}, {}, {}, modifier = Modifier)
+        ProfilePage(viewModel(factory = AppViewModelProvider.Factory),{}, {}, {}, {}, modifier = Modifier)
     }
 }

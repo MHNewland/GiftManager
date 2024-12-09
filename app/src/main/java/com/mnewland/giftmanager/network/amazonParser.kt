@@ -1,21 +1,14 @@
 package com.mnewland.giftmanager.network
 
-import android.app.AlertDialog
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.contentColorFor
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.window.Popup
-import com.mnewland.giftmanager.model.WishlistItem
+import com.mnewland.giftmanager.data.wish_list.WishListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-suspend fun amazonParser(wishlistStr: String): List<WishlistItem> = withContext(Dispatchers.IO) {
-    val items = mutableListOf<WishlistItem>()
+suspend fun amazonParser(wishlistStr: String): List<WishListItem> = withContext(Dispatchers.IO) {
+    val items = mutableListOf<WishListItem>()
     val wishlistID =
         if(wishlistStr.length >=20){
             wishlistStr.substringAfter("wishlist/ls/").substringBefore("?")
@@ -35,7 +28,7 @@ suspend fun amazonParser(wishlistStr: String): List<WishlistItem> = withContext(
             val imageUrl = row.select("img").attr("src")
             val itemUrl = "https://www.amazon.com/dp/B0CPMDT3MW/?coliid=$itemId&colid=3V4DD3EF5H3JX"
 
-            items.add(WishlistItem(title, price, imageUrl, itemUrl, amazonSynced = true))
+           // items.add(WishListItem(title, price, imageUrl, itemUrl, amazonSynced = true))
         }
     }catch(e: HttpStatusException){
 

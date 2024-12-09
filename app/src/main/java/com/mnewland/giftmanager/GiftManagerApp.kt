@@ -3,7 +3,6 @@ package com.mnewland.giftmanager
 import android.app.AlertDialog
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -22,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,12 +36,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mnewland.giftmanager.model.Person
+import com.mnewland.giftmanager.data.person.Person
 import com.mnewland.giftmanager.ui.ListLayout
 import com.mnewland.giftmanager.ui.PreferencesScreen
 import com.mnewland.giftmanager.ui.ProfilePage
 import com.mnewland.giftmanager.utils.GiftManagerContentType
 import com.mnewland.giftmanager.view_models.GiftManagerViewModel
+import kotlinx.coroutines.coroutineScope
 
 
 enum class GiftManagerScreen(@StringRes val title: Int) {
@@ -53,6 +54,7 @@ enum class GiftManagerScreen(@StringRes val title: Int) {
 
 @Composable
 fun GiftManagerApp(
+    viewModel: GiftManagerViewModel = viewModel(factory = AppViewModelProvider.Factory),
     windowSize: WindowSizeClass,
     modifier: Modifier = Modifier
 ){
@@ -74,7 +76,7 @@ fun GiftManagerApp(
         }
     }
 
-    val viewModel: GiftManagerViewModel = viewModel()
+    val fullPersonList by viewModel.getFullPersonList().collectAsState(emptyList())
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val navController: NavHostController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -118,7 +120,7 @@ fun GiftManagerApp(
         ) {
             composable(route = GiftManagerScreen.GiftManager.name) {
                 ListLayout(
-                    uiState.personList,
+                    fullPersonList,
                     onCheckedChange = {
                         viewModel.updateCurrentPerson(it)
                         navController.navigate(GiftManagerScreen.Profile.name)
@@ -136,20 +138,21 @@ fun GiftManagerApp(
             }
             composable(route = GiftManagerScreen.Profile.name) {
                 ProfilePage(
-                    uiState.currentPerson,
+                    viewModel = viewModel,
                     onValueChanged = {
                         viewModel.updateCurrentPerson(it)
                     },
                     onAddButtonClicked = {
-                        viewModel.addPerson(it)
+
+                        //viewModel.addPerson(it)
                         navController.navigateUp()
                     },
                     onEditButtonClicked = {
-                        viewModel.updatePersonData(it)
+                        //viewModel.updatePersonData(it)
                         navController.navigateUp()
                     },
                     onSyncButtonClicked = {
-                        viewModel.updatePersonData(it)
+                        //viewModel.updatePersonData(it)
                     },
                     modifier = modifier
                         .padding(innerPadding)

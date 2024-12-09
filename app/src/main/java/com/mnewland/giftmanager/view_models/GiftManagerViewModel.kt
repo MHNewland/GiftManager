@@ -1,78 +1,68 @@
 package com.mnewland.giftmanager.view_models
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.mnewland.giftmanager.data.PersonList
-import com.mnewland.giftmanager.model.Person
+import com.mnewland.giftmanager.data.person.Person
+import com.mnewland.giftmanager.data.person.PersonRepository
+import com.mnewland.giftmanager.data.wish_list.WishList
+import com.mnewland.giftmanager.data.wish_list.WishListItem
+import com.mnewland.giftmanager.data.wish_list.WishListItemRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlin.random.Random
 
-class GiftManagerViewModel: ViewModel() {
+class GiftManagerViewModel (
+    savedStateHandle: SavedStateHandle,
+    private val personRepository: PersonRepository
+): ViewModel() {
+
     private val _uiState = MutableStateFlow(
         GiftManagerUIState(
-            personList = PersonList.getPersonList(),
-            currentPerson = PersonList.getPersonList().getOrElse(0) {
-                PersonList.defaultPerson
-            }
+            personList = personRepository.getAllPeopleStream(),
+            currentPersonId = 0
         )
     )
 
     val uiState: StateFlow<GiftManagerUIState> = _uiState
 
     fun updateCurrentPerson(selectedPerson: Person) {
-        _uiState.update {
-            it.copy(currentPerson = selectedPerson)
-        }
+        _uiState.value.currentPersonId = selectedPerson.id
     }
 
-    fun updatePersonData(selectedPerson: Person) {
-        val updatePerson: Person
-        updatePerson = selectedPerson
-        val updatedList = _uiState.value.personList.map { person ->
-            if (person.id == updatePerson.id) {
-                updatePerson
-            } else {
-                person
-            }
-        }
-        updateCurrentPerson(updatePerson)
-        _uiState.update { it.copy(personList = updatedList) }
+    suspend fun updatePersonData(selectedPerson: Person) {
+        personRepository.updatePerson(selectedPerson)
     }
 
-
-    fun navigateToListPage() {
-        _uiState.update {
-            it.copy(isShowingListPage = true)
-        }
+    suspend fun addPerson(person: Person) {
+        personRepository.insertPerson(person)
     }
 
-
-    fun navigateToProfilePage() {
-        _uiState.update {
-            it.copy(isShowingListPage = false)
-        }
+    fun getFullPersonList(): Flow<List<Person>>{
+        return personRepository.getAllPeopleStream()
     }
 
-    fun addPerson(person: Person): Person{
-        var newID: Int
-        do {
-            newID = Random.nextInt()
-        } while (_uiState.value.personList.any { it.id == newID })
+    fun getPerson(id: Int): Flow<Person>{
+        return personRepository.getPersonStream(id)
+    }
 
-        val newPerson = person.copy(
-            id = newID
-        )
-        _uiState.update {currentState ->
-            currentState.copy(personList = currentState.personList+newPerson)
-        }
-        return newPerson
+    fun getCurrentPerson(): Flow<Person>{
+        return personRepository.getPersonStream(uiState.value.currentPersonId)
     }
 
 }
 
 data class GiftManagerUIState(
-    val personList: List<Person> = emptyList(),
-    val currentPerson: Person = PersonList.defaultPerson,
-    val isShowingListPage: Boolean = true
+    val personList: Flow<List<Person>>,
+    var currentPersonId: Int
+)
+
+data class PersonDetails(
+    val id: Int = 0,
+    val name: String = "",
+    val listLink: String = "",
+    val purchasedItem: String = "",
+    val wishListId: Int = 0
 )

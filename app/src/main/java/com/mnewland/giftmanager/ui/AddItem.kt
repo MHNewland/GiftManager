@@ -1,7 +1,6 @@
 package com.mnewland.giftmanager.ui
 
 
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,37 +8,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.mnewland.giftmanager.R
-import com.mnewland.giftmanager.data.PersonList
-import com.mnewland.giftmanager.data.Wishlist
-import com.mnewland.giftmanager.model.Person
-import com.mnewland.giftmanager.model.WishlistItem
+import com.mnewland.giftmanager.data.wish_list.WishListItem
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
 
 @Composable
 fun AddItem(
-    item: WishlistItem,
-    onValueChanged: (WishlistItem) -> Unit,
-    onAddButtonClicked: (WishlistItem) -> Unit,
-    onEditButtonClicked: (WishlistItem) -> Unit,
+    item: WishListItem,
+    onValueChanged: (WishListItem) -> Unit,
+    onAddButtonClicked: (WishListItem) -> Unit,
+    onEditButtonClicked: (WishListItem) -> Unit,
     modifier: Modifier = Modifier
 ){
 
@@ -84,13 +75,13 @@ fun AddItem(
             //.border(width = 2.dp, Color.LightGray)
         )
         TextField(
-            value = item.price,
+            value = "$"+item.price,
             label = {
                 Text(
-                    text = stringResource(R.string.purchaced_item)
+                    text = stringResource(R.string.price)
                 )
             },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
                     onAddButtonClicked(item)
@@ -136,6 +127,6 @@ fun AddItem(
 @Composable
 fun AddItemPreview() {
     GiftManagerAppTheme(dynamicColor = false) {
-        AddItem(WishlistItem(),{}, {}, {}, modifier = Modifier)
+        //AddItem(WishListItem(),{}, {}, {}, modifier = Modifier)
     }
 }
