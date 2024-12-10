@@ -1,7 +1,6 @@
 package com.mnewland.giftmanager.ui
 
 
-import android.text.Editable.Factory
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +24,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -53,198 +53,225 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mnewland.giftmanager.AppViewModelProvider
+import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerAppBar
 import com.mnewland.giftmanager.R
-import com.mnewland.giftmanager.data.person.PersonList
-import com.mnewland.giftmanager.data.person.Person
+import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
+import com.mnewland.giftmanager.com.mnewland.giftmanager.view_models.ProfileViewModel
 import com.mnewland.giftmanager.data.wish_list.WishListItem
 import com.mnewland.giftmanager.network.amazonParser
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
-import com.mnewland.giftmanager.view_models.GiftManagerViewModel
 import kotlinx.coroutines.launch
+
+object ProfileDestination : NavigationDestination {
+    override val route = "profile"
+    override val titleRes = R.string.profile
+    //const val personIdArg = "personId"
+    //val routeWithArgs = "$route/{$personIdArg}"
+}
 
 @Composable
 fun ProfilePage(
-    viewModel: GiftManagerViewModel,
-    onValueChanged: (Person) -> Unit,
-    onAddButtonClicked: (Person) -> Unit,
-    onEditButtonClicked: (Person) -> Unit,
-    onSyncButtonClicked: (Person) -> Unit,
+    onBackButtonClick: () -> Unit,
+    onSettingsButtonClick: () -> Unit,
+    viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.Factory),
     modifier: Modifier = Modifier
-){
+) {
     val coroutineScope = rememberCoroutineScope()
     var showSyncErrorDialog by remember { mutableStateOf(false) }
-    val person = viewModel.getCurrentPerson().collectAsState(Person())
+    val uiState = viewModel.uiState.collectAsState()
+    val personData = viewModel.profileUiState.personData
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            //.border(width = 2.dp, Color.Red)
-    ) {
-        Row(
-            modifier = Modifier
-                //.border(2.dp, Color.Cyan)
-        ) {
-            TextField(
-                value = (
-                    "test"
-                ),
-                label = {
-                    Text(
-                        text = stringResource(R.string.name)
-                    )
-                },
-                onValueChange = {
-//                    onValueChanged(
-//                        person.copy(name = it)
-//                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_medium))
+    Scaffold(
+        topBar = {
+            GiftManagerAppBar(
+                onBackButtonPressed = onBackButtonClick,
+                canNavigateUp = true,
+                onSettingsButtonClick = onSettingsButtonClick,
+                context = LocalContext.current,
+                currentScreen = stringResource(ProfileDestination.titleRes),
+                helpMessage = "You can set the person's information here.\n\n If anything is placed in the" +
+                        "\"Purchased Item\" field, it will show a check mark and display " +
+                        "what's entered on the main screen.\n\n" +
+                        "Currently, the app only syncs with Amazon wish lists that are public. " +
+                        "To sync to an amazon list, copy and paste the URL or the ID for the list and click " +
+                        "the sync button.\n\n" +
+                        "To find the ID, look for the string of characters after \"www.amazon.com/hz/wishlist/ls/\"."
             )
         }
-        Row (
-            modifier = Modifier
-                //.border(2.dp, Color.Yellow)
-        ){
-            TextField(
-                value = person.value.purchasedItem,
-                label = {
-                    Text(
-                        text = stringResource(R.string.purchaced_item)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-//                        if (person.id == 0) {
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+            //.border(width = 2.dp, Color.Red)
+        ) {
+            Row(
+                modifier = Modifier
+                //.border(2.dp, Color.Cyan)
+            ) {
+                TextField(
+                    value = (personData.name
+                            ),
+                    label = {
+                        Text(
+                            text = stringResource(R.string.name)
+                        )
+                    },
+                    onValueChange = {
+                        personData.copy(name = it)
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                )
+            }
+            Row(
+                modifier = Modifier
+            ) {
+                TextField(
+                    value = personData.purchasedItem,
+                    label = {
+                        Text(
+                            text = stringResource(R.string.purchaced_item)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+//                        if (personData.id == 0) {
 //                            onAddButtonClicked(person)
 //                        } else {
 //                            onEditButtonClicked(person)
 //                        }
-                    }
-                ),
-                onValueChange = {
+                        }
+                    ),
+                    onValueChange = {
 //                    onValueChanged(
-//                        person.copy(purchasedItem = it)
+//                        personData.copy(purchasedItem = it)
 //                    )
-                },
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(R.dimen.padding_medium))
-            )
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium))
                 //.border(2.dp, Color.LightGray)
-        ) {
-            TextField(
-                value = person.value.wishListId.toString(),
-                label = {
-                    Text(
-                        text = stringResource(R.string.list_link)
-                    )
-                },
-                onValueChange = {
-//                    onValueChanged(
-//                        person.copy(listLink = it)
-//                    )
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                singleLine = true,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(
-                        end = dimensionResource(R.dimen.padding_small)
-                    )
-                //.border(width = 2.dp, Color.LightGray)
-            )
-            Box(modifier = Modifier
-                .width(dimensionResource(R.dimen.button_small_width))
-                .height(dimensionResource(R.dimen.button_small_height))
-            ){
-                Button(
-                    onClick = {
-
-                        /*coroutineScope.launch {
-                            val wishlist = amazonParser(person.listLink)
-                            if(wishlist.isNotEmpty()) {
-                                val updatedPerson = person.copy(wishList = wishlist)
-                                onSyncButtonClicked(updatedPerson)
-                            }else {
-                                showSyncErrorDialog = true
-                            }
-                        }*/
+            ) {
+                TextField(
+                    value = (
+                            if (personData.wishListId != -1)
+                                personData.wishListId.toString()
+                            else
+                                ""
+                            ),
+                    label = {
+                        Text(
+                            text = stringResource(R.string.list_link)
+                        )
                     },
-                    contentPadding = PaddingValues(0.dp),
+                    onValueChange = {
+//                    onValueChanged(
+//                        personData.copy(listLink = it)
+//                    )
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    singleLine = true,
                     modifier = Modifier
-                        .padding(0.dp)
-                        //.border(2.dp, Color.Yellow)
+                        .weight(1f)
+                        .padding(
+                            end = dimensionResource(R.dimen.padding_small)
+                        )
+                    //.border(width = 2.dp, Color.LightGray)
+                )
+                Box(
+                    modifier = Modifier
+                        .width(dimensionResource(R.dimen.button_small_width))
+                        .height(dimensionResource(R.dimen.button_small_height))
                 ) {
-                    Image(
-                        painter = painterResource(R.drawable.baseline_sync_24),
-                        contentDescription = stringResource(R.string.back_button),
-                        modifier = Modifier
-                    )
+                    Button(
+                        onClick = {
 
+                            coroutineScope.launch {
+                                val wishlist = amazonParser(personData.listLink)
+                                if (wishlist.isNotEmpty()) {
+                                    //onSyncButtonClicked(updatedPerson)
+                                } else {
+                                    showSyncErrorDialog = true
+                                }
+                            }
+                        },
+                        contentPadding = PaddingValues(0.dp),
+                        modifier = Modifier
+                            .padding(0.dp)
+                        //.border(2.dp, Color.Yellow)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.baseline_sync_24),
+                            contentDescription = stringResource(R.string.back_button),
+                            modifier = Modifier
+                        )
+
+                    }
                 }
             }
-        }
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = dimensionResource(R.dimen.padding_small),
-                    end = dimensionResource(R.dimen.padding_small)
-                )
-                .weight(1f)
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = dimensionResource(R.dimen.padding_small),
+                        end = dimensionResource(R.dimen.padding_small)
+                    )
+                    .weight(1f)
                 //.border(2.dp, Color.Cyan)
-        ) {
-            ShowSyncErrorDialog(
-                showDialog = showSyncErrorDialog,
-                onDismiss = { showSyncErrorDialog = false },
-            )
-            if(person.value.wishListId!=0)
-                //ItemList()
-            else
-                Text(
-                    text = "No items found",
-                    modifier = modifier
-                        .align(Alignment.CenterVertically)
+            ) {
+                ShowSyncErrorDialog(
+                    showDialog = showSyncErrorDialog,
+                    onDismiss = { showSyncErrorDialog = false },
                 )
-        }
+                if (personData.wishListId != 0)
+                //ItemList()
+                else
+                    Text(
+                        text = "No items found",
+                        modifier = modifier
+                            .align(Alignment.CenterVertically)
+                    )
+            }
 
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
                 //.border(2.dp, Color.Magenta)
-        ) {
-            Button(
-                onClick = {
-//                    if (person.id == 0) {
+            ) {
+                Button(
+                    onClick = {
+//                    if (personData.id == 0) {
 //                        onAddButtonClicked(person)
 //                    } else {
 //                        onEditButtonClicked(person)
 //                    }
-                },
-                shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius))
-            ) {
-                Text(
-                    text = ("test"
-//                        if (person.id == 0) {
+                    },
+                    shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius))
+                ) {
+                    Text(
+                        text = ("test"
+//                        if (personData.id == 0) {
 //                            "Add person"
 //                        } else {
 //                            "Edit person"
 //                        }
+                                )
                     )
-                )
+                }
             }
         }
     }
@@ -355,7 +382,7 @@ fun WishlistItemCard(
                     maxLines = 3
                 )
                 Text(
-                    text = item.price,
+                    text = item.price.toString(),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
@@ -373,7 +400,7 @@ fun WishlistItemPreview() {
             WishListItem(
                 id = 0,
                 title = "test",
-                price = "20.99",
+                price = "20.99".toDouble(),
                 imageUrl = "https://m.media-amazon.com/images/I/51UnZ6EohmL._SS135_.jpg",
                 itemUrl = "testURL",
                 personId = 0
@@ -388,6 +415,6 @@ fun WishlistItemPreview() {
 @Composable
 fun ProfilePagePreview() {
     GiftManagerAppTheme(dynamicColor = false) {
-        ProfilePage(viewModel(factory = AppViewModelProvider.Factory),{}, {}, {}, {}, modifier = Modifier)
+        ProfilePage(onBackButtonClick = {}, onSettingsButtonClick = {})
     }
 }

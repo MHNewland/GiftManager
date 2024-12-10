@@ -4,12 +4,11 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,16 +19,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.mnewland.giftmanager.R
+import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerAppBar
+import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
 import kotlin.random.Random
-import kotlin.random.nextInt
 
+object SettingsDestination : NavigationDestination {
+    override val route = "settings"
+    override val titleRes = R.string.preferences
+}
 
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
-fun PreferencesScreen(
+fun SettingsScreen(
+    onBackButtonPressed: () -> Unit,
     context: Context = LocalContext.current,
     modifier: Modifier = Modifier
 ) {
@@ -39,56 +44,70 @@ fun PreferencesScreen(
     val defaultColor = colorResource(R.color.test)
     val storedColor = Color(sharedPreferences.getInt("test", Color.White.toArgb()))
     val backgroundColor = remember { mutableStateOf(storedColor) }
-
-    Column(
-        modifier
-            .fillMaxSize()
-            .background(color = backgroundColor.value),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = {
-
-                // Generate a random color
-                val newColor = Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
-
-                // Store the color in SharedPreferences
-                Log.d("prefs before", sharedPreferences.getInt("test", -1).toHexString())
-
-                // Update the state with the new color
-                backgroundColor.value = newColor
-
-                val editor = sharedPreferences.edit()
-                editor.putInt("test", newColor.toArgb())
-                editor.apply()
-
-                Log.d("prefs after", sharedPreferences.getInt("test", -1).toHexString())
-            }
-        ) {
-            Text(text = "Press me")
+    Scaffold(
+        topBar = {
+            GiftManagerAppBar(
+                onBackButtonPressed = onBackButtonPressed,
+                canNavigateUp = true,
+                onSettingsButtonClick = {  },
+                context = LocalContext.current,
+                currentScreen = stringResource(SettingsDestination.titleRes),
+                helpMessage = "This hasn't been implemented yet.",
+            )
         }
-        Button(
-            onClick = {
-
-                // Generate a random color
-                val newColor = defaultColor
-
-                // Store the color in SharedPreferences
-                Log.d("prefs before", sharedPreferences.getInt("test", -1).toHexString())
-
-                // Update the state with the new color
-                backgroundColor.value = newColor
-
-                val editor = sharedPreferences.edit()
-                editor.putInt("test", newColor.toArgb())
-                editor.apply()
-
-                Log.d("prefs after", sharedPreferences.getInt("test", -1).toHexString())
-            },
-            modifier.padding()
+    ) { innerPadding ->
+        Column(
+            modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(color = backgroundColor.value),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Load Default Color")
+            Button(
+                onClick = {
+
+                    // Generate a random color
+                    val newColor =
+                        Color(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
+
+                    // Store the color in SharedPreferences
+                    Log.d("prefs before", sharedPreferences.getInt("test", -1).toHexString())
+
+                    // Update the state with the new color
+                    backgroundColor.value = newColor
+
+                    val editor = sharedPreferences.edit()
+                    editor.putInt("test", newColor.toArgb())
+                    editor.apply()
+
+                    Log.d("prefs after", sharedPreferences.getInt("test", -1).toHexString())
+                }
+            ) {
+                Text(text = "Press me")
+            }
+            Button(
+                onClick = {
+
+                    // Generate a random color
+                    val newColor = defaultColor
+
+                    // Store the color in SharedPreferences
+                    Log.d("prefs before", sharedPreferences.getInt("test", -1).toHexString())
+
+                    // Update the state with the new color
+                    backgroundColor.value = newColor
+
+                    val editor = sharedPreferences.edit()
+                    editor.putInt("test", newColor.toArgb())
+                    editor.apply()
+
+                    Log.d("prefs after", sharedPreferences.getInt("test", -1).toHexString())
+                },
+                modifier.padding()
+            ) {
+                Text(text = "Load Default Color")
+            }
         }
     }
 
@@ -97,5 +116,5 @@ fun PreferencesScreen(
 @Preview
 @Composable
 fun PrefTest(){
-    PreferencesScreen()
+    SettingsScreen({})
 }

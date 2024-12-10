@@ -1,4 +1,4 @@
-package com.mnewland.giftmanager.com.mnewland.giftmanager.ui
+package com.mnewland.giftmanager.com.mnewland.giftmanager
 
 import android.app.AlertDialog
 import android.content.Context
@@ -17,13 +17,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import com.mnewland.giftmanager.R
+import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.GiftManagerNavGraph
 
+
+@Composable
+fun GiftManagerApp(navController: NavHostController = rememberNavController(), windowSize: WindowSizeClass) {
+    GiftManagerNavGraph(navController = navController)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GiftManagerAppBar(
-    onBackButtonClick: () -> Unit = {},
+    onBackButtonPressed: () -> Unit = {},
     canNavigateUp: Boolean,
     onSettingsButtonClick: () -> Unit,
     context: Context,
@@ -41,7 +50,7 @@ fun GiftManagerAppBar(
         },
         navigationIcon = {
             if (canNavigateUp) {
-                IconButton(onClick = onBackButtonClick) {
+                IconButton(onClick = onBackButtonPressed) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button)
@@ -71,7 +80,7 @@ fun GiftManagerAppBar(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Settings,
-                    contentDescription = stringResource(R.string.back_button)
+                    contentDescription = stringResource(R.string.preferences)
                 )
             }
         },

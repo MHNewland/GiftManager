@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.platform.LocalContext
+import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerApp
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)

@@ -88,9 +88,8 @@ fun AddItem(
                 }
             ),
             onValueChange = {
-                onValueChanged(
-                    item.copy(price = it)
-                )
+                    item.copy(price = it.toDouble())
+
             },
             modifier = Modifier
                 .fillMaxWidth()

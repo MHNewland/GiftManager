@@ -16,11 +16,11 @@ import com.mnewland.giftmanager.data.person.Person
 )
 data class WishListItem(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val title: String = "",
-    val price: String = "",
+    val price: Double = 0.0,
     val imageUrl: String = "",
     val itemUrl: String = "",
     val amazonSynced: Boolean = false,
-    val personId: Int
+    val personId: Int = 0
 )

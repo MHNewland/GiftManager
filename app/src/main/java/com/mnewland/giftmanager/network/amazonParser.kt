@@ -28,7 +28,15 @@ suspend fun amazonParser(wishlistStr: String): List<WishListItem> = withContext(
             val imageUrl = row.select("img").attr("src")
             val itemUrl = "https://www.amazon.com/dp/B0CPMDT3MW/?coliid=$itemId&colid=3V4DD3EF5H3JX"
 
-           // items.add(WishListItem(title, price, imageUrl, itemUrl, amazonSynced = true))
+            items.add(
+                WishListItem(
+                    title = title,
+                    price = price.toDouble(),
+                    imageUrl=imageUrl,
+                    itemUrl = itemUrl,
+                    amazonSynced = true
+                )
+            )
         }
     }catch(e: HttpStatusException){
 
