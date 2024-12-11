@@ -1,6 +1,6 @@
-package com.mnewland.giftmanager.com.mnewland.giftmanager.view_models
+package com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person
 
-import androidx.compose.runtime.MutableState
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,19 +10,34 @@ import androidx.lifecycle.viewModelScope
 import com.mnewland.giftmanager.data.person.Person
 import com.mnewland.giftmanager.data.person.PersonData
 import com.mnewland.giftmanager.data.person.PersonRepository
-import com.mnewland.giftmanager.ui.ProfileDestination
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class ProfileViewModel (
     savedStateHandle: SavedStateHandle,
     private val personRepository: PersonRepository
 ): ViewModel() {
 
-    private val personId: Int = -1//checkNotNull(savedStateHandle[ProfileDestination.personIdArg])
+    private val personId: Int = checkNotNull(savedStateHandle[ProfileDestination.personIdArg])
+
+    var profileUiState by mutableStateOf(ProfileUiState())
+        private set
+
+    init {
+        viewModelScope.launch {
+            profileUiState = personRepository.getPersonStream(personId)
+                .filterNotNull()
+                .first()
+                .toProfileUiState()
+        }
+
+    }
+
 
     val uiState: StateFlow<ProfileUiState> =
         personRepository.getPersonStream(id = personId )
@@ -35,9 +50,6 @@ class ProfileViewModel (
                 initialValue = ProfileUiState()
             )
 
-    var profileUiState by mutableStateOf(ProfileUiState())
-        private set
-
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
@@ -46,12 +58,10 @@ class ProfileViewModel (
         profileUiState = ProfileUiState(personData = personData)
     }
 
-    suspend fun updatePersonData(selectedPerson: Person) {
-        personRepository.updatePerson(selectedPerson)
-    }
-
-    suspend fun addPerson(person: Person) {
-        personRepository.insertPerson(person)
+    suspend fun updatePersonData() {
+        Log.d("update Person", profileUiState.personData.toString())
+        val rowsChanged = personRepository.updatePerson(profileUiState.personData.toPerson())
+        Log.d("update Person", "rows changed: $rowsChanged")
     }
 }
 
@@ -59,24 +69,7 @@ data class ProfileUiState(
     val personData: PersonData = PersonData(),
 )
 
-fun Person.toPersonData(): PersonData =
-    PersonData(
-        name = name,
-        listLink = listLink,
-        purchasedItem = purchasedItem
-    )
-
-
 fun Person.toProfileUiState() =
     ProfileUiState(
         personData = this.toPersonData()
-    )
-
-fun PersonData.toPerson() =
-    Person(
-        id = id,
-        name = name,
-        listLink = listLink,
-        purchasedItem = purchasedItem,
-        wishListId = wishListId
     )

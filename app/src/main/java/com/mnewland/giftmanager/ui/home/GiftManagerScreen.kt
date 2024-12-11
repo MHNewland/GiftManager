@@ -1,4 +1,4 @@
-package com.mnewland.giftmanager.ui
+package com.mnewland.giftmanager.com.mnewland.giftmanager.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -39,7 +39,6 @@ import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
 import com.mnewland.giftmanager.data.person.Person
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
-import com.mnewland.giftmanager.view_models.GiftManagerViewModel
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -50,6 +49,7 @@ fun ListLayout(
     viewModel: GiftManagerViewModel = viewModel(factory = AppViewModelProvider.Factory),
     onSettingsButtonPressed: () -> Unit,
     onAddPersonPressed: () -> Unit,
+    navigateToProfile:(Int) -> Unit,
     modifier: Modifier = Modifier
 ){
     Scaffold(
@@ -79,13 +79,14 @@ fun ListLayout(
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .background(MaterialTheme.colorScheme.background)
         ) {
             val people by viewModel.giftManagerUiState.collectAsState()
             people.personList.forEach { person ->
                 PersonCardLayout(
                     person = person,
-                    modifier = modifier.padding(innerPadding)
+                    navigateToProfile = navigateToProfile
                 )
             }
         }
@@ -96,6 +97,7 @@ fun ListLayout(
 @Composable
 fun PersonCardLayout(
     person: Person,
+    navigateToProfile: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ){
     Card(
@@ -115,16 +117,16 @@ fun PersonCardLayout(
         ) {
             Checkbox(
                 checked = person.purchasedItem!="",
-                onCheckedChange = {
-                   // onCheckedChange(person)
-                },
+                enabled = false,
+                onCheckedChange = null,
                 modifier = modifier
                     .align(Alignment.CenterVertically)
+                    .padding(start = dimensionResource(R.dimen.padding_small))
             )
             CardData(
                 person = person,
                 itemPurchased = person.purchasedItem!="",
-                //onProfileButtonClicked = {onProfileButtonClicked(person)}
+                onProfileButtonClicked = {navigateToProfile(it.id)}
             )
         }
     }
@@ -134,11 +136,11 @@ fun PersonCardLayout(
 fun CardData(
     person: Person,
     itemPurchased: Boolean,
-    //onProfileButtonClicked: (Person) -> Unit,
+    onProfileButtonClicked: (Person) -> Unit,
     modifier: Modifier = Modifier
 ){
     Button(
-        onClick = {},//onProfileButtonClicked(person)},
+        onClick = {onProfileButtonClicked(person)},
         shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
         colors = ButtonColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -213,7 +215,7 @@ fun CardData(
 @Composable
 fun PersonCardLayoutPreview(){
     GiftManagerAppTheme(dynamicColor = false) {
-        //PersonCardLayout(PersonList.defaultPerson,{},{}, modifier = Modifier)
+        PersonCardLayout(Person(), {})
     }
 }
 

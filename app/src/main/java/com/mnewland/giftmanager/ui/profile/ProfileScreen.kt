@@ -1,4 +1,4 @@
-package com.mnewland.giftmanager.ui
+package com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person
 
 
 import android.util.Log
@@ -56,7 +56,6 @@ import com.mnewland.giftmanager.AppViewModelProvider
 import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerAppBar
 import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
-import com.mnewland.giftmanager.com.mnewland.giftmanager.view_models.ProfileViewModel
 import com.mnewland.giftmanager.data.wish_list.WishListItem
 import com.mnewland.giftmanager.network.amazonParser
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
@@ -65,8 +64,8 @@ import kotlinx.coroutines.launch
 object ProfileDestination : NavigationDestination {
     override val route = "profile"
     override val titleRes = R.string.profile
-    //const val personIdArg = "personId"
-    //val routeWithArgs = "$route/{$personIdArg}"
+    const val personIdArg = "personId"
+    val routeWithArgs = "$route/{$personIdArg}"
 }
 
 @Composable
@@ -78,7 +77,6 @@ fun ProfilePage(
 ) {
     val coroutineScope = rememberCoroutineScope()
     var showSyncErrorDialog by remember { mutableStateOf(false) }
-    val uiState = viewModel.uiState.collectAsState()
     val personData = viewModel.profileUiState.personData
 
     Scaffold(
@@ -88,14 +86,14 @@ fun ProfilePage(
                 canNavigateUp = true,
                 onSettingsButtonClick = onSettingsButtonClick,
                 context = LocalContext.current,
-                currentScreen = stringResource(ProfileDestination.titleRes),
+                currentScreen = stringResource(AddPersonDestination.titleRes),
                 helpMessage = "You can set the person's information here.\n\n If anything is placed in the" +
                         "\"Purchased Item\" field, it will show a check mark and display " +
                         "what's entered on the main screen.\n\n" +
                         "Currently, the app only syncs with Amazon wish lists that are public. " +
                         "To sync to an amazon list, copy and paste the URL or the ID for the list and click " +
                         "the sync button.\n\n" +
-                        "To find the ID, look for the string of characters after \"www.amazon.com/hz/wishlist/ls/\"."
+                        "To find the wishlist ID, look for the string of characters after \"www.amazon.com/hz/wishlist/ls/\"."
             )
         }
     ) { innerPadding ->
@@ -118,7 +116,7 @@ fun ProfilePage(
                         )
                     },
                     onValueChange = {
-                        personData.copy(name = it)
+                        viewModel.updateUiState(personData.copy(name = it))
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     modifier = Modifier
@@ -136,20 +134,9 @@ fun ProfilePage(
                             text = stringResource(R.string.purchaced_item)
                         )
                     },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-//                        if (personData.id == 0) {
-//                            onAddButtonClicked(person)
-//                        } else {
-//                            onEditButtonClicked(person)
-//                        }
-                        }
-                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     onValueChange = {
-//                    onValueChanged(
-//                        personData.copy(purchasedItem = it)
-//                    )
+                        viewModel.updateUiState(personData.copy(purchasedItem = it))
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,21 +151,14 @@ fun ProfilePage(
                 //.border(2.dp, Color.LightGray)
             ) {
                 TextField(
-                    value = (
-                            if (personData.wishListId != -1)
-                                personData.wishListId.toString()
-                            else
-                                ""
-                            ),
+                    value = personData.listLink,
                     label = {
                         Text(
                             text = stringResource(R.string.list_link)
                         )
                     },
                     onValueChange = {
-//                    onValueChanged(
-//                        personData.copy(listLink = it)
-//                    )
+                        viewModel.updateUiState(personData.copy(listLink = it))
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     singleLine = true,
@@ -187,7 +167,6 @@ fun ProfilePage(
                         .padding(
                             end = dimensionResource(R.dimen.padding_small)
                         )
-                    //.border(width = 2.dp, Color.LightGray)
                 )
                 Box(
                     modifier = Modifier
@@ -229,13 +208,12 @@ fun ProfilePage(
                         end = dimensionResource(R.dimen.padding_small)
                     )
                     .weight(1f)
-                //.border(2.dp, Color.Cyan)
             ) {
                 ShowSyncErrorDialog(
                     showDialog = showSyncErrorDialog,
                     onDismiss = { showSyncErrorDialog = false },
                 )
-                if (personData.wishListId != 0)
+                if (personData.wishListId != null)
                 //ItemList()
                 else
                     Text(
@@ -254,22 +232,14 @@ fun ProfilePage(
             ) {
                 Button(
                     onClick = {
-//                    if (personData.id == 0) {
-//                        onAddButtonClicked(person)
-//                    } else {
-//                        onEditButtonClicked(person)
-//                    }
+                        coroutineScope.launch{
+                            viewModel.updatePersonData()
+                        }
                     },
                     shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius))
                 ) {
                     Text(
-                        text = ("test"
-//                        if (personData.id == 0) {
-//                            "Add person"
-//                        } else {
-//                            "Edit person"
-//                        }
-                                )
+                        text = ("Update Person")
                     )
                 }
             }
@@ -303,7 +273,7 @@ fun ItemList(
         horizontalAlignment = Alignment.Start,
         modifier = modifier
             .fillMaxSize()
-            //.border(2.dp, Color.Green)
+        //.border(2.dp, Color.Green)
     ){
         items(itemList){ item ->
             WishlistItemCard(item, modifier)
@@ -413,7 +383,7 @@ fun WishlistItemPreview() {
 @Preview(name = "Dark Mode",
     uiMode = 33)
 @Composable
-fun ProfilePagePreview() {
+fun ProfilePreview() {
     GiftManagerAppTheme(dynamicColor = false) {
         ProfilePage(onBackButtonClick = {}, onSettingsButtonClick = {})
     }

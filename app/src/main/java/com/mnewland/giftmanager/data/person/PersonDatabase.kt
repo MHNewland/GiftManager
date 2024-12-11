@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.mnewland.giftmanager.data.wish_list.WishListItem
 
-@Database(entities = [Person::class, WishListItem::class], version = 2, exportSchema = false)
+@Database(entities = [Person::class, WishListItem::class], version = 3, exportSchema = false)
 abstract class PersonDatabase : RoomDatabase(){
     abstract fun personDao(): PersonDao
     companion object{

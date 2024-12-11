@@ -5,8 +5,9 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.mnewland.giftmanager.com.mnewland.giftmanager.view_models.ProfileViewModel
-import com.mnewland.giftmanager.view_models.GiftManagerViewModel
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.AddNewPersonViewModel
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.ProfileViewModel
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.home.GiftManagerViewModel
 
 
 object AppViewModelProvider {
@@ -18,6 +19,11 @@ object AppViewModelProvider {
             )
         }
         initializer{
+            AddNewPersonViewModel(
+                giftManagerApplication().container.personRepository
+            )
+        }
+        initializer {
             ProfileViewModel(
                 this.createSavedStateHandle(),
                 giftManagerApplication().container.personRepository

@@ -1,4 +1,4 @@
-package com.mnewland.giftmanager.view_models
+package com.mnewland.giftmanager.com.mnewland.giftmanager.ui.home
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.mnewland.giftmanager.data.person.Person
 import com.mnewland.giftmanager.data.person.PersonRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
