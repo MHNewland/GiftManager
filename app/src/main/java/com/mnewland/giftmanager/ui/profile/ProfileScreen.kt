@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -29,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,10 +56,15 @@ import com.mnewland.giftmanager.AppViewModelProvider
 import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerAppBar
 import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
+import com.mnewland.giftmanager.data.person.PersonData
 import com.mnewland.giftmanager.data.wish_list.WishListItem
 import com.mnewland.giftmanager.network.amazonParser
 import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.internal.wait
 
 object ProfileDestination : NavigationDestination {
     override val route = "profile"
@@ -76,8 +81,8 @@ fun ProfilePage(
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var showSyncErrorDialog by remember { mutableStateOf(false) }
     val personData = viewModel.profileUiState.personData
+    var showSyncErrorDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -97,151 +102,188 @@ fun ProfilePage(
             )
         }
     ) { innerPadding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-            //.border(width = 2.dp, Color.Red)
+        ProfileBody(
+            updateUiState = {viewModel.updateUiState(it)},
+            personData = personData,
+            onSyncClick = {
+
+                Log.d("sync", "checking ${personData.wishListItems.isEmpty()}")
+                if(
+                    //if returns true if successful, false if not
+                    !runBlocking {
+                        return@runBlocking viewModel.syncAmazonItems(it)
+                    }
+                ){
+                    showSyncErrorDialog = true
+                }
+
+            },
+            onUpdatePersonClick = {
+                coroutineScope.launch{
+                    viewModel.updatePersonData()
+                }
+            },
+            onDeletePersonClick = {
+                coroutineScope.launch {
+                    viewModel.deletePerson()
+                }
+                onBackButtonClick()
+            },
+            modifier = modifier.padding(innerPadding)
+        )
+        ShowSyncErrorDialog(
+            showDialog = showSyncErrorDialog,
+            onDismiss = { showSyncErrorDialog = false },
+        )
+    }
+}
+
+@Composable
+fun ProfileBody(
+    updateUiState: (PersonData) -> Unit,
+    personData: PersonData,
+    onSyncClick: (String) -> Unit,
+    onUpdatePersonClick: () -> Unit,
+    onDeletePersonClick: () -> Unit,
+    modifier: Modifier = Modifier
+){
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+        //.border(width = 2.dp, Color.Red)
+    ) {
+        Row(
+            modifier = Modifier
+            //.border(2.dp, Color.Cyan)
         ) {
-            Row(
-                modifier = Modifier
-                //.border(2.dp, Color.Cyan)
-            ) {
-                TextField(
-                    value = (personData.name
-                            ),
-                    label = {
-                        Text(
-                            text = stringResource(R.string.name)
-                        )
-                    },
-                    onValueChange = {
-                        viewModel.updateUiState(personData.copy(name = it))
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                )
-            }
-            Row(
-                modifier = Modifier
-            ) {
-                TextField(
-                    value = personData.purchasedItem,
-                    label = {
-                        Text(
-                            text = stringResource(R.string.purchaced_item)
-                        )
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    onValueChange = {
-                        viewModel.updateUiState(personData.copy(purchasedItem = it))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+            TextField(
+                value = (personData.name
+                        ),
+                label = {
+                    Text(
+                        text = stringResource(R.string.name)
+                    )
+                },
+                onValueChange = {
+                    updateUiState(personData.copy(name = it))
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(R.dimen.padding_medium))
-                //.border(2.dp, Color.LightGray)
-            ) {
-                TextField(
-                    value = personData.listLink,
-                    label = {
-                        Text(
-                            text = stringResource(R.string.list_link)
-                        )
-                    },
-                    onValueChange = {
-                        viewModel.updateUiState(personData.copy(listLink = it))
-                    },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    singleLine = true,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(
-                            end = dimensionResource(R.dimen.padding_small)
-                        )
-                )
-                Box(
-                    modifier = Modifier
-                        .width(dimensionResource(R.dimen.button_small_width))
-                        .height(dimensionResource(R.dimen.button_small_height))
-                ) {
-                    Button(
-                        onClick = {
-
-                            coroutineScope.launch {
-                                val wishlist = amazonParser(personData.listLink)
-                                if (wishlist.isNotEmpty()) {
-                                    //onSyncButtonClicked(updatedPerson)
-                                } else {
-                                    showSyncErrorDialog = true
-                                }
-                            }
-                        },
-                        contentPadding = PaddingValues(0.dp),
-                        modifier = Modifier
-                            .padding(0.dp)
-                        //.border(2.dp, Color.Yellow)
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.baseline_sync_24),
-                            contentDescription = stringResource(R.string.back_button),
-                            modifier = Modifier
-                        )
-
-                    }
-                }
-            }
-            Row(
-                horizontalArrangement = Arrangement.Center,
+            )
+        }
+        Row(
+            modifier = Modifier
+        ) {
+            TextField(
+                value = personData.purchasedItem,
+                label = {
+                    Text(
+                        text = stringResource(R.string.purchased_item)
+                    )
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                onValueChange = {
+                    updateUiState(personData.copy(purchasedItem = it))
+                },
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.padding_medium))
+            )
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_medium))
+            //.border(2.dp, Color.LightGray)
+        ) {
+            TextField(
+                value = personData.listLink,
+                label = {
+                    Text(
+                        text = stringResource(R.string.list_link)
+                    )
+                },
+                onValueChange = {
+                    updateUiState(personData.copy(listLink = it))
+                },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                singleLine = true,
+                modifier = Modifier
+                    .weight(1f)
                     .padding(
-                        start = dimensionResource(R.dimen.padding_small),
                         end = dimensionResource(R.dimen.padding_small)
                     )
-                    .weight(1f)
-            ) {
-                ShowSyncErrorDialog(
-                    showDialog = showSyncErrorDialog,
-                    onDismiss = { showSyncErrorDialog = false },
-                )
-                if (personData.wishListId != null)
-                //ItemList()
-                else
-                    Text(
-                        text = "No items found",
-                        modifier = modifier
-                            .align(Alignment.CenterVertically)
-                    )
-            }
-
-            Row(
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.Center,
+            )
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                //.border(2.dp, Color.Magenta)
+                    .width(dimensionResource(R.dimen.button_small_width))
+                    .height(dimensionResource(R.dimen.button_small_height))
             ) {
                 Button(
                     onClick = {
-                        coroutineScope.launch{
-                            viewModel.updatePersonData()
-                        }
+                        onSyncClick(personData.listLink)
+
                     },
-                    shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius))
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .padding(0.dp)
+                    //.border(2.dp, Color.Yellow)
                 ) {
-                    Text(
-                        text = ("Update Person")
+                    Image(
+                        painter = painterResource(R.drawable.baseline_sync_24),
+                        contentDescription = stringResource(R.string.back_button),
+                        modifier = Modifier
                     )
+
                 }
+            }
+        }
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_small)
+                )
+                .weight(1f)
+        ) {
+
+            if (personData.wishListItems.isNotEmpty())
+                ItemList(personData.wishListItems)
+            else
+                Text(
+                    text = "No items found",
+                    modifier = modifier
+                        .align(Alignment.CenterVertically)
+                )
+        }
+
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+            //.border(2.dp, Color.Magenta)
+        ) {
+            Button(
+                onClick = onUpdatePersonClick,
+                shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius))
+            ) {
+                Text(
+                    text = stringResource(R.string.update_person)
+                )
+            }
+            Button(
+                onClick = onDeletePersonClick,
+                shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius))
+            ) {
+                Text(
+                    text = stringResource(R.string.delete_person)
+                )
             }
         }
     }

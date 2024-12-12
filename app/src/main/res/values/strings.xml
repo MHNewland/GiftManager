@@ -4,9 +4,16 @@
     <string name="add_person">Add new person</string>
     <string name="name">Name</string>
     <string name="list_link">Link to list</string>
-    <string name="purchaced_item">Item Purchased</string>
+    <string name="purchased_item">Item Purchased</string>
     <string name="gift_manager">Gift Manager</string>
     <string name="profile">Profile</string>
     <string name="preferences">Preferences</string>
     <string name="price">Price</string>
+    <string name="wish_list">Wish List</string>
+    <string name="item_url">Item URL/Address</string>
+    <string name="image_url">Item image URL/Address</string>
+    <string name="add_item">Add Item</string>
+    <string name="update_person">Update Person</string>
+    <string name="update_item">Update Item</string>
+    <string name="delete_person">Delete Person</string>
 </resources>

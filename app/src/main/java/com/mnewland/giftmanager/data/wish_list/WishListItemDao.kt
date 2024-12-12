@@ -14,6 +14,9 @@ interface WishListItemDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(wishListItem: WishListItem)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(wishListItems: List<WishListItem>)
+
     @Update
     suspend fun update(wishListItem: WishListItem)
 
@@ -23,7 +26,10 @@ interface WishListItemDao {
     @Query("SELECT * from WishListItems WHERE id = :id")
     fun getWishListItem(id: Int): Flow<WishListItem>
 
-    @Query("SELECT * from WishListItems ORDER BY title")
-    fun getAllWishListItems(): Flow<List<WishListItem>>
+    @Query("SELECT * FROM WishListItems WHERE amazonSynced = 1 AND personId = :personId")
+    fun getAmazonSyncedItems(personId: Int): Flow<List<WishListItem>>
+
+    @Query("SELECT * from WishListItems WHERE personId = :personId ORDER BY title")
+    fun getAllWishListItems(personId: Int): Flow<List<WishListItem>>
 
 }

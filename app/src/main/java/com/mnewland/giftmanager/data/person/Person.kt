@@ -6,22 +6,13 @@ import androidx.room.PrimaryKey
 import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.ProfileUiState
 import com.mnewland.giftmanager.data.wish_list.WishListItem
 
-@Entity(
-    tableName = "PersonList",
-    foreignKeys = [ForeignKey(
-        entity = WishListItem::class,
-        parentColumns = ["id"],
-        childColumns = ["wishListId"],
-        onDelete = ForeignKey.CASCADE
-    )]
-)
+@Entity(tableName = "PersonList")
 data class Person(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
     val listLink: String = "",
     val purchasedItem: String = "",
-    val wishListId: Int? = null
 ){
     fun toPersonData(): PersonData =
         PersonData(
@@ -37,7 +28,7 @@ data class PersonData(
     val name: String = "",
     val listLink: String = "",
     val purchasedItem: String = "",
-    val wishListId: Int? = null
+    val wishListItems: List<WishListItem> = emptyList(),
 ){
     fun toPerson() =
         Person(
@@ -45,7 +36,6 @@ data class PersonData(
             name = name,
             listLink = listLink,
             purchasedItem = purchasedItem,
-            wishListId = wishListId
         )
 
     override fun toString(): String{

@@ -1,13 +1,14 @@
 package com.mnewland.giftmanager.network
 
 import com.mnewland.giftmanager.data.wish_list.WishListItem
+import io.ktor.utils.io.charsets.MalformedInputException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-suspend fun amazonParser(wishlistStr: String): List<WishListItem> = withContext(Dispatchers.IO) {
+suspend fun amazonParser(wishlistStr: String, personId: Int): List<WishListItem> = withContext(Dispatchers.IO) {
     val items = mutableListOf<WishListItem>()
     val wishlistID =
         if(wishlistStr.length >=20){
@@ -31,14 +32,17 @@ suspend fun amazonParser(wishlistStr: String): List<WishListItem> = withContext(
             items.add(
                 WishListItem(
                     title = title,
-                    price = price.toDouble(),
+                    price = price.substringAfter("$","").toDoubleOrNull()?:0.0,
                     imageUrl=imageUrl,
                     itemUrl = itemUrl,
-                    amazonSynced = true
+                    amazonSynced = true,
+                    personId = personId
                 )
             )
         }
     }catch(e: HttpStatusException){
+
+    }catch (e: MalformedInputException){
 
     }
 
