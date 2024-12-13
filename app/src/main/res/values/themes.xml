@@ -1,5 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Default Theme (Light) -->
+    <style name="GiftManagerTheme.Light" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryLight</item>
+        <item name="colorOnPrimary">@color/onPrimaryLight</item>
+        <item name="colorPrimaryContainer">@color/primaryContainerLight</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainerLight</item>
+        <item name="colorSecondary">@color/secondaryLight</item>
+        <item name="colorOnSecondary">@color/onSecondaryLight</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainerLight</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainerLight</item>
+        <item name="colorTertiary">@color/tertiaryLight</item>
+        <item name="colorOnTertiary">@color/onTertiaryLight</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainerLight</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainerLight</item>
+        <item name="colorError">@color/errorLight</item>
+        <item name="colorOnError">@color/onErrorLight</item>
+        <item name="colorErrorContainer">@color/errorContainerLight</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainerLight</item>
+        <item name="colorBackground">@color/backgroundLight</item>
+        <item name="colorOnBackground">@color/onBackgroundLight</item>
+        <item name="colorSurface">@color/surfaceLight</item>
+        <item name="colorOnSurface">@color/onSurfaceLight</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantLight</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantLight</item>
+        <item name="colorOutline">@color/outlineLight</item>
+        <item name="colorOutlineVariant">@color/outlineVariantLight</item>
+        <item name="colorScrim">@color/scrimLight</item>
+        <item name="colorInverseSurface">@color/inverseSurfaceLight</item>
+        <item name="colorInverseOnSurface">@color/inverseOnSurfaceLight</item>
+        <item name="colorInversePrimary">@color/inversePrimaryLight</item>
+        <item name="colorSurfaceDim">@color/surfaceDimLight</item>
+        <item name="colorSurfaceBright">@color/surfaceBrightLight</item>
+        <item name="colorSurfaceContainerLowest">@color/surfaceContainerLowestLight</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceContainerLowLight</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainerLight</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHighLight</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighestLight</item>
+    </style>
 
-    <style name="Theme.GiftManager" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Dark Theme -->
+    <style name="GiftManagerTheme.Dark" parent="android:ThemeOverlay.Material.Dark">
+        <item name="colorPrimary">@color/primaryDark</item>
+        <item name="colorOnPrimary">@color/onPrimaryDark</item>
+        <item name="colorPrimaryContainer">@color/primaryContainerDark</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainerDark</item>
+        <item name="colorSecondary">@color/secondaryDark</item>
+        <item name="colorOnSecondary">@color/onSecondaryDark</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainerDark</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainerDark</item>
+        <item name="colorTertiary">@color/tertiaryDark</item>
+        <item name="colorOnTertiary">@color/onTertiaryDark</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainerDark</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainerDark</item>
+        <item name="colorError">@color/errorDark</item>
+        <item name="colorOnError">@color/onErrorDark</item>
+        <item name="colorErrorContainer">@color/errorContainerDark</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainerDark</item>
+        <item name="colorBackground">@color/backgroundDark</item>
+        <item name="colorOnBackground">@color/onBackgroundDark</item>
+        <item name="colorSurface">@color/surfaceDark</item>
+        <item name="colorOnSurface">@color/onSurfaceDark</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantDark</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantDark</item>
+        <item name="colorOutline">@color/outlineDark</item>
+        <item name="colorOutlineVariant">@color/outlineVariantDark</item>
+        <item name="colorScrim">@color/scrimDark</item>
+        <item name="colorInverseSurface">@color/inverseSurfaceDark</item>
+        <item name="colorInverseOnSurface">@color/inverseOnSurfaceDark</item>
+        <item name="colorInversePrimary">@color/inversePrimaryDark</item>
+        <item name="colorSurfaceDim">@color/surfaceDimDark</item>
+        <item name="colorSurfaceBright">@color/surfaceBrightDark</item>
+        <item name="colorSurfaceContainerLowest">@color/surfaceContainerLowestDark</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceContainerLowDark</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainerDark</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHighDark</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighestDark</item>
+    </style>
+
+    <!-- Medium Contrast Light Theme -->
+    <style name="GiftManagerTheme.MediumContrastLight" parent="android:ThemeOverlay.Material.Dark">
+        <item name="colorPrimary">@color/primaryLightMediumContrast</item>
+        <item name="colorOnPrimary">@color/onPrimaryLightMediumContrast</item>
+        <item name="colorPrimaryContainer">@color/primaryContainerLightMediumContrast</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainerLightMediumContrast</item>
+        <item name="colorSecondary">@color/secondaryLightMediumContrast</item>
+        <item name="colorOnSecondary">@color/onSecondaryLightMediumContrast</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainerLightMediumContrast</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainerLightMediumContrast</item>
+        <item name="colorTertiary">@color/tertiaryLightMediumContrast</item>
+        <item name="colorOnTertiary">@color/onTertiaryLightMediumContrast</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainerLightMediumContrast</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainerLightMediumContrast</item>
+        <item name="colorError">@color/errorLightMediumContrast</item>
+        <item name="colorOnError">@color/onErrorLightMediumContrast</item>
+        <item name="colorErrorContainer">@color/errorContainerLightMediumContrast</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainerLightMediumContrast</item>
+        <item name="colorBackground">@color/backgroundLightMediumContrast</item>
+        <item name="colorOnBackground">@color/onBackgroundLightMediumContrast</item>
+        <item name="colorSurface">@color/surfaceLightMediumContrast</item>
+        <item name="colorOnSurface">@color/onSurfaceLightMediumContrast</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantLightMediumContrast</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantLightMediumContrast</item>
+        <item name="colorOutline">@color/outlineLightMediumContrast</item>
+        <item name="colorOutlineVariant">@color/outlineVariantLightMediumContrast</item>
+        <item name="colorScrim">@color/scrimLightMediumContrast</item>
+        <item name="colorInverseSurface">@color/inverseSurfaceLightMediumContrast</item>
+        <item name="colorInverseOnSurface">@color/inverseOnSurfaceLightMediumContrast</item>
+        <item name="colorInversePrimary">@color/inversePrimaryLightMediumContrast</item>
+        <item name="colorSurfaceDim">@color/surfaceDimLightMediumContrast</item>
+        <item name="colorSurfaceBright">@color/surfaceBrightLightMediumContrast</item>
+        <item name="colorSurfaceContainerLowest">@color/surfaceContainerLowestLightMediumContrast</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceContainerLowLightMediumContrast</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainerLightMediumContrast</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHighLightMediumContrast</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighestLightMediumContrast</item>
+    </style>
+
+    <!-- High Contrast Light Theme -->
+    <style name="GiftManagerTheme.HighContrastLight" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryLightHighContrast</item>
+        <item name="colorOnPrimary">@color/onPrimaryLightHighContrast</item>
+        <item name="colorPrimaryContainer">@color/primaryContainerLightHighContrast</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainerLightHighContrast</item>
+        <item name="colorSecondary">@color/secondaryLightHighContrast</item>
+        <item name="colorOnSecondary">@color/onSecondaryLightHighContrast</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainerLightHighContrast</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainerLightHighContrast</item>
+        <item name="colorTertiary">@color/tertiaryLightHighContrast</item>
+        <item name="colorOnTertiary">@color/onTertiaryLightHighContrast</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainerLightHighContrast</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainerLightHighContrast</item>
+        <item name="colorError">@color/errorLightHighContrast</item>
+        <item name="colorOnError">@color/onErrorLightHighContrast</item>
+        <item name="colorErrorContainer">@color/errorContainerLightHighContrast</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainerLightHighContrast</item>
+        <item name="colorBackground">@color/backgroundLightHighContrast</item>
+        <item name="colorOnBackground">@color/onBackgroundLightHighContrast</item>
+        <item name="colorSurface">@color/surfaceLightHighContrast</item>
+        <item name="colorOnSurface">@color/onSurfaceLightHighContrast</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantLightHighContrast</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantLightHighContrast</item>
+        <item name="colorOutline">@color/outlineLightHighContrast</item>
+        <item name="colorOutlineVariant">@color/outlineVariantLightHighContrast</item>
+        <item name="colorScrim">@color/scrimLightHighContrast</item>
+        <item name="colorInverseSurface">@color/inverseSurfaceLightHighContrast</item>
+        <item name="colorInverseOnSurface">@color/inverseOnSurfaceLightHighContrast</item>
+        <item name="colorInversePrimary">@color/inversePrimaryLightHighContrast</item>
+        <item name="colorSurfaceDim">@color/surfaceDimLightHighContrast</item>
+        <item name="colorSurfaceBright">@color/surfaceBrightLightHighContrast</item>
+        <item name="colorSurfaceContainerLowest">@color/surfaceContainerLowestLightHighContrast</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceContainerLowLightHighContrast</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainerLightHighContrast</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHighLightHighContrast</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighestLightHighContrast</item>
+    </style>
+
+    <!-- Medium Contrast Dark Theme -->
+    <style name="GiftManagerTheme.MediumContrastDark" parent="android:ThemeOverlay.Material.Dark">
+        <item name="colorPrimary">@color/primaryDarkMediumContrast</item>
+        <item name="colorOnPrimary">@color/onPrimaryDarkMediumContrast</item>
+        <item name="colorPrimaryContainer">@color/primaryContainerDarkMediumContrast</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainerDarkMediumContrast</item>
+        <item name="colorSecondary">@color/secondaryDarkMediumContrast</item>
+        <item name="colorOnSecondary">@color/onSecondaryDarkMediumContrast</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainerDarkMediumContrast</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainerDarkMediumContrast</item>
+        <item name="colorTertiary">@color/tertiaryDarkMediumContrast</item>
+        <item name="colorOnTertiary">@color/onTertiaryDarkMediumContrast</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainerDarkMediumContrast</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainerDarkMediumContrast</item>
+        <item name="colorError">@color/errorDarkMediumContrast</item>
+        <item name="colorOnError">@color/onErrorDarkMediumContrast</item>
+        <item name="colorErrorContainer">@color/errorContainerDarkMediumContrast</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainerDarkMediumContrast</item>
+        <item name="colorBackground">@color/backgroundDarkMediumContrast</item>
+        <item name="colorOnBackground">@color/onBackgroundDarkMediumContrast</item>
+        <item name="colorSurface">@color/surfaceDarkMediumContrast</item>
+        <item name="colorOnSurface">@color/onSurfaceDarkMediumContrast</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantDarkMediumContrast</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantDarkMediumContrast</item>
+        <item name="colorOutline">@color/outlineDarkMediumContrast</item>
+        <item name="colorOutlineVariant">@color/outlineVariantDarkMediumContrast</item>
+        <item name="colorScrim">@color/scrimDarkMediumContrast</item>
+        <item name="colorInverseSurface">@color/inverseSurfaceDarkMediumContrast</item>
+        <item name="colorInverseOnSurface">@color/inverseOnSurfaceDarkMediumContrast</item>
+        <item name="colorInversePrimary">@color/inversePrimaryDarkMediumContrast</item>
+        <item name="colorSurfaceDim">@color/surfaceDimDarkMediumContrast</item>
+        <item name="colorSurfaceBright">@color/surfaceBrightDarkMediumContrast</item>
+        <item name="colorSurfaceContainerLowest">@color/surfaceContainerLowestDarkMediumContrast</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceContainerLowDarkMediumContrast</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainerDarkMediumContrast</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHighDarkMediumContrast</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighestDarkMediumContrast</item>
+    </style>
+
+    <!-- High Contrast Dark Theme -->
+    <style name="GiftManagerTheme.HighContrastDark" parent="android:ThemeOverlay.Material.Dark">
+        <item name="colorPrimary">@color/primaryDarkHighContrast</item>
+        <item name="colorOnPrimary">@color/onPrimaryDarkHighContrast</item>
+        <item name="colorPrimaryContainer">@color/primaryContainerDarkHighContrast</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainerDarkHighContrast</item>
+        <item name="colorSecondary">@color/secondaryDarkHighContrast</item>
+        <item name="colorOnSecondary">@color/onSecondaryDarkHighContrast</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainerDarkHighContrast</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainerDarkHighContrast</item>
+        <item name="colorTertiary">@color/tertiaryDarkHighContrast</item>
+        <item name="colorOnTertiary">@color/onTertiaryDarkHighContrast</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainerDarkHighContrast</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainerDarkHighContrast</item>
+        <item name="colorError">@color/errorDarkHighContrast</item>
+        <item name="colorOnError">@color/onErrorDarkHighContrast</item>
+        <item name="colorErrorContainer">@color/errorContainerDarkHighContrast</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainerDarkHighContrast</item>
+        <item name="colorBackground">@color/backgroundDarkHighContrast</item>
+        <item name="colorOnBackground">@color/onBackgroundDarkHighContrast</item>
+        <item name="colorSurface">@color/surfaceDarkHighContrast</item>
+        <item name="colorOnSurface">@color/onSurfaceDarkHighContrast</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariantDarkHighContrast</item>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariantDarkHighContrast</item>
+        <item name="colorOutline">@color/outlineDarkHighContrast</item>
+        <item name="colorOutlineVariant">@color/outlineVariantDarkHighContrast</item>
+        <item name="colorScrim">@color/scrimDarkHighContrast</item>
+        <item name="colorInverseSurface">@color/inverseSurfaceDarkHighContrast</item>
+        <item name="colorInverseOnSurface">@color/inverseOnSurfaceDarkHighContrast</item>
+        <item name="colorInversePrimary">@color/inversePrimaryDarkHighContrast</item>
+        <item name="colorSurfaceDim">@color/surfaceDimDarkHighContrast</item>
+        <item name="colorSurfaceBright">@color/surfaceBrightDarkHighContrast</item>
+        <item name="colorSurfaceContainerLowest">@color/surfaceContainerLowestDarkHighContrast</item>
+        <item name="colorSurfaceContainerLow">@color/surfaceContainerLowDarkHighContrast</item>
+        <item name="colorSurfaceContainer">@color/surfaceContainerDarkHighContrast</item>
+        <item name="colorSurfaceContainerHigh">@color/surfaceContainerHighDarkHighContrast</item>
+        <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighestDarkHighContrast</item>
+    </style>
 </resources>

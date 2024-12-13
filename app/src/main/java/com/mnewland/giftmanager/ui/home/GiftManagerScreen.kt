@@ -38,7 +38,6 @@ import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerAppBar
 import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
 import com.mnewland.giftmanager.data.person.Person
-import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -214,9 +213,7 @@ fun CardData(
     uiMode = 33, showBackground = false)
 @Composable
 fun PersonCardLayoutPreview(){
-    GiftManagerAppTheme(dynamicColor = false) {
-        PersonCardLayout(Person(), {})
-    }
+    PersonCardLayout(Person(), {})
 }
 
 @Preview(name = "Light Mode", showBackground = false)
@@ -224,8 +221,6 @@ fun PersonCardLayoutPreview(){
     uiMode = 33, showBackground = false)
 @Composable
 fun ListLayoutPreview(){
-    GiftManagerAppTheme(dynamicColor = false){
-        //ListLayout(PersonList.getPersonList(),{},{}, modifier = Modifier)
-    }
+    //ListLayout(PersonList.getPersonList(),{},{}, modifier = Modifier)
 }
 

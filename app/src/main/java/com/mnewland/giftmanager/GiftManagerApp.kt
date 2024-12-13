@@ -1,32 +1,35 @@
 package com.mnewland.giftmanager.com.mnewland.giftmanager
 
+//import androidx.compose.material3.MaterialTheme
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.GiftManagerNavGraph
 
 
 @Composable
-fun GiftManagerApp(navController: NavHostController = rememberNavController(), windowSize: WindowSizeClass) {
-    GiftManagerNavGraph(navController = navController)
+fun GiftManagerApp(navController: NavHostController = rememberNavController(), windowSize: WindowSizeClass, activity: Activity) {
+    GiftManagerNavGraph(navController = navController, activity)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,11 +43,14 @@ fun GiftManagerAppBar(
     currentScreen: String,
     modifier: Modifier = Modifier
 ) {
+   // Log.d("GiftManagerAppBar", MaterialTheme.colorScheme.primary.toString())
+    Log.d("Context Theme", Color(R.attr.colorPrimary).toString())
+
     TopAppBar(
         title = {
             Text(
                 text = currentScreen,
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                //color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -85,7 +91,7 @@ fun GiftManagerAppBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            //containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         modifier = modifier,
     )

@@ -28,7 +28,6 @@ import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerAppBar
 import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
 import com.mnewland.giftmanager.data.wish_list.WishListItemData
-import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
 import kotlinx.coroutines.launch
 
 
@@ -196,7 +195,6 @@ fun WishListItemBody(
     uiMode = 33)
 @Composable
 fun AddWishListItemsPreview() {
-    GiftManagerAppTheme(dynamicColor = false) {
-        WishListItemBody({},{},WishListItemData())
-    }
+    WishListItemBody({},{},WishListItemData())
+
 }

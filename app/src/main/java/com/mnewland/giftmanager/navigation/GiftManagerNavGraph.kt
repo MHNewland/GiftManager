@@ -1,5 +1,6 @@
 package com.mnewland.giftmanager.com.mnewland.giftmanager.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -7,20 +8,20 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.home.HomeDestination
-import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.home.ListLayout
-import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.AddPersonDestination
 import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.AddNewPersonPage
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.AddPersonDestination
 import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.ProfileDestination
 import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person.ProfilePage
-import com.mnewland.giftmanager.ui.SettingsDestination
-import com.mnewland.giftmanager.ui.SettingsScreen
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.home.HomeDestination
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.home.ListLayout
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.settings.SettingsDestination
+import com.mnewland.giftmanager.com.mnewland.giftmanager.ui.settings.SettingsScreen
 
 @Composable
 fun GiftManagerNavGraph (
     navController: NavHostController,
+    activity: Activity,
     modifier: Modifier = Modifier,
-
 ){
     NavHost(
         navController = navController,
@@ -39,7 +40,8 @@ fun GiftManagerNavGraph (
         }
         composable(route = SettingsDestination.route){
             SettingsScreen(
-               onBackButtonPressed = {navController.navigateUp()}
+               onBackButtonPressed = {navController.navigateUp()},
+                activity = activity
             )
         }
         composable(

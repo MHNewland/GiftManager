@@ -27,7 +27,6 @@ import com.mnewland.giftmanager.AppViewModelProvider
 import com.mnewland.giftmanager.R
 import com.mnewland.giftmanager.com.mnewland.giftmanager.GiftManagerAppBar
 import com.mnewland.giftmanager.com.mnewland.giftmanager.navigation.NavigationDestination
-import com.mnewland.giftmanager.ui.theme.GiftManagerAppTheme
 import kotlinx.coroutines.launch
 
 object AddPersonDestination : NavigationDestination {
@@ -116,7 +115,5 @@ fun AddNewPersonPage(
     uiMode = 33)
 @Composable
 fun AddNewPersonPreview() {
-    GiftManagerAppTheme(dynamicColor = false) {
-        AddNewPersonPage({},{},{})
-    }
+    AddNewPersonPage({},{},{})
 }

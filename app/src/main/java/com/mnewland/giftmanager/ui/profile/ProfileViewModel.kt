@@ -1,6 +1,7 @@
 package com.mnewland.giftmanager.com.mnewland.giftmanager.ui.add_new_person
 
 import android.util.Log
+import androidx.collection.emptyScatterMap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.Dictionary
 
 class ProfileViewModel (
     savedStateHandle: SavedStateHandle,
@@ -30,29 +32,28 @@ class ProfileViewModel (
     var profileUiState by mutableStateOf(ProfileUiState())
         private set
 
+    var loadedProfiles: MutableMap<Int, ProfileUiState> = mutableMapOf(Pair(-1, ProfileUiState()))
+
     init {
-        Log.d("ProfileViewModel", "init run")
-        viewModelScope.launch {
-            val wishListItems: List<WishListItem> =
-                wishListItemRepository
+        profileUiState = loadedProfiles.getOrPut(personId) {
+            viewModelScope.launch {
+                val wishListItems = wishListItemRepository
                     .getAllWishListItemsStream(personId)
                     .first()
 
-            profileUiState = personRepository.getPersonStream(personId)
-                .filterNotNull()
-                .first()
-                .toProfileUiState()
-            //I know there's probably a better way of doing this
-            //but I don't have the time to figure it out at the moment.
-            profileUiState = profileUiState
-                .copy(
-                    personData = profileUiState.personData
-                        .copy(
-                            wishListItems = wishListItems
-                        )
-                )
-        }
+                val person = personRepository.getPersonStream(personId)
+                    .filterNotNull()
+                    .first()
+                    .toProfileUiState()
 
+                profileUiState = person.copy(
+                    personData = person.personData.copy(
+                        wishListItems = wishListItems
+                    )
+                )
+            }
+            profileUiState
+        }
     }
 
     fun updateUiState(personData: PersonData){
